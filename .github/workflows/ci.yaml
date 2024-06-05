@@ -25,10 +25,9 @@ jobs:
       run: |
         version=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/RPGLogs/Uploaders-warcraftlogs/releases/latest | jq -r '.tag_name')
         source=$(echo "https://github.com/RPGLogs/Uploaders-warcraftlogs/releases/download/${version}/warcraftlogs-${version}.AppImage")
-        source_hash=$(curl "${source}" | sha512sum)
+        source_hash=$(curl "${source}" | sha512sum | awk '{print $1}')
         sed -i "s|{{__source__}}|${source}|g" PKGBUILD
         sed -i "s|{{__source_hash__}}|${source_hash}|g" PKGBUILD
-        cat PKGBUILD
         docker pull archlinux:latest
         docker run --rm -v $(pwd):/pkg -w /pkg archlinux:latest bash -c "pacman -Sy --noconfirm base-devel fuse2 && useradd -u $(id -u) runner && su runner -s /bin/sh -c 'makepkg -sf && makepkg --printsrcinfo > .SRCINFO'"
 
