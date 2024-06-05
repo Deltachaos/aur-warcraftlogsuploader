@@ -25,7 +25,8 @@ jobs:
       run: |
         version=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/RPGLogs/Uploaders-warcraftlogs/releases/latest | jq -r '.tag_name')
         source=$(echo "https://github.com/RPGLogs/Uploaders-warcraftlogs/releases/download/${version}/warcraftlogs-${version}.AppImage")
-        source_hash=$(curl "${source}" | sha512sum | awk '{print $1}')
+        wget -O /tmp/source "${source}"
+        source_hash=$(sha512sum /tmp/source | awk '{print $1}')
         sed -i "s|{{__source__}}|${source}|g" PKGBUILD
         sed -i "s|{{__source_hash__}}|${source_hash}|g" PKGBUILD
         docker pull archlinux:latest
