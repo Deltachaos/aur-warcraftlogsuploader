@@ -28,6 +28,7 @@ jobs:
         source_hash=$(curl "${source}" | sha512sum)
         sed -i "s|{{__source__}}|${source}|g" PKGBUILD
         sed -i "s|{{__source_hash__}}|${source_hash}|g" PKGBUILD
+        cat PKGBUILD
         docker pull archlinux:latest
         docker run --rm -v $(pwd):/pkg -w /pkg archlinux:latest bash -c "pacman -Sy --noconfirm base-devel fuse2 && useradd -u $(id -u) runner && su runner -s /bin/sh -c 'makepkg -sf && makepkg --printsrcinfo > .SRCINFO'"
 
