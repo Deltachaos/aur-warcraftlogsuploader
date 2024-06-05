@@ -1,0 +1,58 @@
+name: Build with makepkg
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "45 8 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build Package
+      run: |
+        docker pull archlinux:latest
+        docker run --rm -v $(pwd):/pkg -w /pkg archlinux:latest bash -c "pacman -Sy --noconfirm base-devel fuse2 && useradd -u $(id -u) runner && su runner -s /bin/sh -c 'makepkg -sf && makepkg --printsrcinfo > .SRCINFO'"
+
+    - name: Configure Git
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/aur
+        chmod 600 ~/.ssh/aur
+        git config --global --add safe.directory $(pwd)
+        git config --global user.email "mr@deltachaos.de"
+        git config --global user.name "Maximilian Ruta"
+
+    - name: Create commit
+      run: |
+        git -c init.defaultbranch=master clone ssh://aur@aur.archlinux.org/warcraftlogsuploader-appimage.git /tmp/aur
+        oldpwd=$(pwd)
+        shopt -s extglob
+        cd "/tmp/aur"
+        rm -rf !( .git )
+        shopt -u extglob
+        find ${oldpwd} -maxdepth 1 -type f -print0 | xargs -0 -I {} cp "{}" /tmp/aur
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "Changes detected"
+          git add -u
+          git add .
+          git commit -m "Update from CI"
+          git push
+        else
+          echo "No changes detected"
+          exit 0
+        fi
+      env:
+        GIT_SSH_COMMAND: "ssh -i ~/.ssh/aur -o StrictHostKeyChecking=accept-new"
