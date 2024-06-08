@@ -7,6 +7,7 @@ pkgrel=1
 pkgdesc="warcraftlogs.com desktop client for Linux"
 arch=('x86_64')
 depends=("fuse2")
+conflicts=("warcraftlogsuploader")
 url="https://warcraftlogs.com/"
 source=("$_pkgapp.AppImage::{{__source__}}"
         'start')
