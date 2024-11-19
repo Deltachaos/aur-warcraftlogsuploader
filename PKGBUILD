@@ -9,7 +9,7 @@ arch=('x86_64')
 depends=("fuse2")
 conflicts=("warcraftlogsuploader")
 url="https://warcraftlogs.com/"
-source=("$_pkgapp.AppImage::{{__source__}}"
+source=("${_pkgapp}-{{__source_hash__}}.AppImage::{{__source__}}"
         'start')
 license=('custom' 'MIT' 'custom:chromium-licenses')
 options=(!strip)
@@ -19,18 +19,18 @@ sha512sums=('{{__source_hash__}}'
 
 pkgver() {
     cd ${srcdir}
-    chmod +x ${srcdir}/${_pkgapp}.AppImage
-    ${srcdir}/${_pkgapp}.AppImage --appimage-extract >/dev/null
+    chmod +x ${srcdir}/${_pkgapp}-{{__source_hash__}}.AppImage
+    ${srcdir}/${_pkgapp}-{{__source_hash__}}.AppImage --appimage-extract >/dev/null
     cat ${srcdir}/squashfs-root/warcraftlogs.desktop | grep 'X-AppImage-Version' | sed 's!^X-AppImage-Version=!!g'
 }
 
 package() {
     cd ${srcdir}
-    chmod +x ${srcdir}/${_pkgapp}.AppImage
-    ./${_pkgapp}.AppImage --appimage-extract >/dev/null
+    chmod +x ${srcdir}/${_pkgapp}-{{__source_hash__}}.AppImage
+    ./${_pkgapp}-{{__source_hash__}}.AppImage --appimage-extract >/dev/null
     sed -i 's/Exec=.*/Exec=\/usr\/bin\/'${_pkgapp}' %U/' squashfs-root/warcraftlogs.desktop
 
-    install -Dm755 ${_pkgapp}.AppImage "${pkgdir}/opt/${_pkgapp}/${_pkgapp}.AppImage"
+    install -Dm755 ${_pkgapp}-{{__source_hash__}}.AppImage "${pkgdir}/opt/${_pkgapp}/${_pkgapp}.AppImage"
     install -Dm755 "start" "${pkgdir}/usr/bin/${_pkgapp}"
     install -dm755 "${pkgdir}/usr/share/applications/"
     install -dm755 "${pkgdir}/usr/share/icons/hicolor/512x512/apps/"
