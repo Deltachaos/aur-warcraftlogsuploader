@@ -1,6 +1,6 @@
 # Maintainer: Deltachaos <mr@deltachaos.de>
 
-pkgname=warcraftlogsuploader-appimage
+pkgname=warcraftlogsuploader
 _pkgapp=warcraftlogsuploader
 pkgver=0.0.0
 pkgrel=1
@@ -9,7 +9,7 @@ arch=('x86_64')
 depends=("fuse2")
 conflicts=("warcraftlogsuploader")
 url="https://warcraftlogs.com/"
-source=("${_pkgapp}-{{__source_hash__}}.AppImage::{{__source__}}"
+source=("${_pkgapp}-{{__version__}}.AppImage::{{__source__}}"
         'start')
 license=('custom' 'MIT' 'custom:chromium-licenses')
 options=(!strip)
