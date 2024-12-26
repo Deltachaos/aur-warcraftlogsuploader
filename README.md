@@ -6,8 +6,8 @@ This repository provides an automated daily build for updating the Arch Linux AU
 
 The `warcraftlogsuploader` is a tool for uploading logs to [WarcraftLogs](https://warcraftlogs.com/), allowing World of Warcraft players to share and analyze their raid and dungeon performance. This automated build ensures that the latest release of the uploader is always available on the Arch User Repository (AUR) for Arch Linux users.
 
-The AUR package is available at:  
-[warcraftlogsuploader on AUR](https://aur.archlinux.org/packages/warcraftlogsuploader)
+* [warcraftlogsuploader on AUR](https://aur.archlinux.org/packages/warcraftlogsuploader)
+* [warcraftlogsuploader on GitHub](https://github.com/Deltachaos/aur-warcraftlogsuploader)
 
 ## Features
 
@@ -26,8 +26,8 @@ yay -S warcraftlogsuploader
 Alternatively, you can manually install the package from the AUR by downloading the PKGBUILD and running:
 
 ```bash
-git clone https://aur.archlinux.org/cgit/aur.git
-cd aur
+git clone https://aur.archlinux.org/warcraftlogsuploader.git warcraftlogsuploader
+cd warcraftlogsuploader
 makepkg -si
 ```
 
