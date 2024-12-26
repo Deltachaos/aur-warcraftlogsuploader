@@ -1,6 +1,6 @@
 # Maintainer: Deltachaos <mr@deltachaos.de>
 
-pkgname=warcraftlogsuploader-appimage
+pkgname=warcraftlogsuploader
 _pkgapp=warcraftlogsuploader
 pkgver=0.0.0
 pkgrel=1
