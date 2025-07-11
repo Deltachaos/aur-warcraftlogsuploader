@@ -7,9 +7,6 @@ on:
   schedule:
     - cron: "45 8 * * *"
 
-env:
-  GH_TOKEN: ${{ github.token }}
-
 permissions:
   actions: write
 
@@ -36,16 +33,8 @@ jobs:
         sed -i "s|{{__source__}}|${source}|g" PKGBUILD
         sed -i "s|{{__source_hash__}}|${source_hash}|g" PKGBUILD
         sed -i "s|{{__version__}}|${version}|g" PKGBUILD
-        wget -O /tmp/PKGBUILD.old "https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=warcraftlogsuploader"
-        if ! diff /tmp/PKGBUILD.old PKGBUILD > /dev/null; then
-          rm -f /tmp/PKGBUILD.old
-          gh run cancel ${{ github.run_id }}
-          gh run watch ${{ github.run_id }}
-        else
-          rm -f /tmp/PKGBUILD.old
-          docker pull archlinux:latest
-          docker run --rm -v $(pwd):/pkg -w /pkg archlinux:latest bash -c "pacman -Sy --noconfirm base-devel fuse2 && useradd -u $(id -u) runner && su runner -s /bin/sh -c 'makepkg -sf && makepkg --printsrcinfo > .SRCINFO'"
-        fi
+        docker pull archlinux:latest
+        docker run --rm -v $(pwd):/pkg -w /pkg archlinux:latest bash -c "pacman -Sy --noconfirm base-devel fuse2 && useradd -u $(id -u) runner && su runner -s /bin/sh -c 'makepkg -sf && makepkg --printsrcinfo > .SRCINFO'"
 
     - name: Configure Git
       run: |
