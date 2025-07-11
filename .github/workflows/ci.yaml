@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - master
-  schedule:
-    - cron: "45 8 * * *"
+#  schedule:
+#    - cron: "45 8 * * *"
 
 permissions:
   actions: write
