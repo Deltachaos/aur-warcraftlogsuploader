@@ -4,8 +4,7 @@ on:
   push:
     branches:
       - master
-#  schedule:
-#    - cron: "45 8 * * *"
+  workflow_dispatch: {}
 
 permissions:
   actions: write
